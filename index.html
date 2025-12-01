@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurnal KBM Guru - Info Header Vertikal</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            max-width: 1000px; 
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Gaya untuk Header Info (Nama Guru, Mapel, Sekolah) */
+        .info-header {
+            display: block; 
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .info-group {
+            margin-bottom: 10px; 
+            display: flex; 
+            align-items: center;
+        }
+
+        .info-group label {
+            width: 150px; 
+            flex-shrink: 0;
+            font-weight: bold;
+            margin-right: 10px;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .info-group input[type="text"] {
+            flex-grow: 1; 
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        /* --- Gaya Tabel --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        input[type="text"]:not(.info-header input), 
+        input[type="number"],
+        textarea,
+        input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical; 
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        #btn-add { background-color: #ffc107; color: #333; }
+        #btn-save { background-color: #28a745; color: white; }
+        #btn-print { background-color: #007bff; color: white; }
+
+        .print-data { display: none; }
+        
+        /* PENGATURAN LEBAR KOLOM UNTUK LAYAR */
+        /* Kolom Kelas diperlebar dari 10% menjadi 15% */
+        .materi-col { width: 25%; } /* Dikurangi dari 30% menjadi 25% */
+        .absent-students-col { width: 20%; } 
+        
+        /* ---------------------------------------------------- */
+        /* CSS KHUSUS UNTUK CETAK (@media print) */
+        /* ---------------------------------------------------- */
+        @media print {
+            .button-group, p { display: none !important; }
+            .container { box-shadow: none !important; padding: 0 !important; width: 100% !important; margin: 0 !important; }
+            body { margin: 0 !important; background: white !important; }
+            
+            /* Tampilan Info Header Saat Cetak */
+            .info-header { display: block !important; border: none !important; background-color: white !important; margin-bottom: 20px !important; padding: 0 !important; }
+            .info-group { display: block !important; margin-bottom: 5px; page-break-inside: avoid; }
+            .info-group label { display: inline-block !important; width: 120px !important; font-weight: normal !important; color: #333 !important; }
+            .info-group input { display: none !important; } 
+            .info-group .print-data { display: inline !important; font-weight: bold; color: #333; }
+
+            table { width: 100% !important; table-layout: fixed; }
+            th { background-color: #007bff !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+            input:not(.info-header input), textarea { display: none; }
+            .print-data { display: block !important; word-wrap: break-word; white-space: pre-wrap; }
+            
+            /* PENGATURAN LEBAR KOLOM UNTUK CETAK */
+            /* Kolom Kelas (2) diperlebar dari 10% menjadi 15% */
+            /* Kolom Materi (3) dikurangi dari 35% menjadi 30% */
+            .print-safe-table th:nth-child(1), .print-safe-table td:nth-child(1) { width: 12%; } /* Hari/Tanggal */
+            .print-safe-table th:nth-child(2), .print-safe-table td:nth-child(2) { width: 15%; } /* Kelas (Lebar Baru) */
+            .print-safe-table th:nth-child(3), .print-safe-table td:nth-child(3) { width: 30%; } /* Materi & Kegiatan (Lebar Baru) */
+            .print-safe-table th:nth-child(4), .print-safe-table td:nth-child(4) { width: 8%; }  
+            .print-safe-table th:nth-child(5), .print-safe-table td:nth-child(5) { width: 8%; }  
+            .print-safe-table th:nth-child(6), .print-safe-table td:nth-child(6) { width: 27%; } 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Jurnal Kegiatan Belajar Mengajar Guru</h1>
+        
+        <div class="info-header" id="info-header-form">
+            <div class="info-group">
+                <label for="nama-guru">Nama Guru:</label>
+                <input type="text" id="nama-guru" name="nama_guru" placeholder="Masukkan Nama Guru">
+                <span class="print-data print-nama_guru"></span>
+            </div>
+            <div class="info-group">
+                <label for="mata-pelajaran">Mata Pelajaran:</label>
+                <input type="text" id="mata-pelajaran" name="mata_pelajaran" placeholder="Masukkan Mata Pelajaran">
+                <span class="print-data print-mata_pelajaran"></span>
+            </div>
+            <div class="info-group">
+                <label for="nama-sekolah">Nama Sekolah:</label>
+                <input type="text" id="nama-sekolah" name="nama_sekolah" placeholder="Masukkan Nama Sekolah">
+                <span class="print-data print-nama_sekolah"></span>
+            </div>
+        </div>
+        <form id="jurnal-form">
+            <table class="print-safe-table"> 
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">Hari / Tanggal</th>
+                        <th style="width: 15%;">Kelas</th> <th class="materi-col">Materi & Kegiatan</th>
+                        <th style="width: 8%;">Hadir</th>
+                        <th style="width: 8%;">Tidak Hadir</th>
+                        <th class="absent-students-col">Nama Siswa Tidak Hadir (dan Keterangan)</th>
+                    </tr>
+                </thead>
+                <tbody id="jurnal-body">
+                    </tbody>
+            </table>
+
+            <div class="button-group">
+                <button type="button" id="btn-add">Tambah Agenda Berikutnya</button>
+                <button type="button" id="btn-save">Simpan Agenda</button>
+                <button type="button" id="btn-print">Cetak Jurnal</button>
+            </div>
+            <p style="margin-top: 15px; font-size: 0.9em; color: #666;">* Data disimpan di peramban Anda (Local Storage). Data akan hilang jika Anda menghapus riwayat peramban atau *cache*.</p>
+        </form>
+    </div>
+
+    <script>
+        const JURNAL_STORAGE_KEY = 'jurnalGuruData';
+        const INFO_STORAGE_KEY = 'jurnalGuruInfoHeader'; 
+        const jurnalBody = document.getElementById('jurnal-body');
+        const infoHeaderForm = document.getElementById('info-header-form');
+        let agendaCounter = 0;
+
+        // --- FUNGSI HEADER INFO ---
+        function saveInfoHeader() {
+            const data = {};
+            const fields = infoHeaderForm.querySelectorAll('input');
+            fields.forEach(input => {
+                data[input.name] = input.value;
+            });
+            localStorage.setItem(INFO_STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function loadInfoHeader() {
+            const savedData = localStorage.getItem(INFO_STORAGE_KEY);
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                const fields = infoHeaderForm.querySelectorAll('input');
+                
+                fields.forEach(input => {
+                    const value = data[input.name] || '';
+                    input.value = value;
+                    updatePrintDataHeader(input.name, value);
+                });
+            }
+        }
+        
+        function updatePrintDataHeader(name, value) {
+            const printElement = document.querySelector(`.print-${name}`);
+            if (printElement) {
+                printElement.textContent = value;
+            }
+            saveInfoHeader();
+        }
+
+        // --- FUNGSI JURNAL ---
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const [year, month, day] = dateString.split('-');
+            return `${day}/${month}/${year}`;
+        }
+        
+        function updatePrintData(rowId, name, value) {
+            const row = document.getElementById(rowId);
+            const printElement = row.querySelector(`.print-${name}`);
+            if (printElement) {
+                if (name === 'tanggal') {
+                    printElement.textContent = formatDate(value);
+                } else {
+                    printElement.textContent = value;
+                }
+            }
+        }
+
+        function createNewAgendaRow(data = {}) {
+            agendaCounter++;
+            
+            const defaults = {
+                tanggal: data.tanggal || new Date().toISOString().substring(0, 10),
+                kelas: data.kelas || '',
+                materi: data.materi || '',
+                hadir: data.hadir || '',
+                tidak_hadir: data.tidak_hadir || '',
+                nama_alpa: data.nama_alpa || data.keterangan || '', 
+            };
+            
+            const formattedDate = formatDate(defaults.tanggal);
+
+            const rowHtml = `
+                <tr id="row-${agendaCounter}">
+                    <td>
+                        <input type="date" name="tanggal" value="${defaults.tanggal}" required oninput="updatePrintData('row-${agendaCounter}', 'tanggal', this.value)">
+                        <span class="print-data print-tanggal">${formattedDate}</span>
+                    </td>
+                    <td>
+                        <input type="text" name="kelas" value="${defaults.kelas}" placeholder="X IPA 1" required oninput="updatePrintData('row-${agendaCounter}', 'kelas', this.value)">
+                        <span class="print-data print-kelas">${defaults.kelas}</span>
+                    </td>
+                    <td>
+                        <textarea name="materi" rows="3" placeholder="Materi dan Kegiatan KBM" oninput="updatePrintData('row-${agendaCounter}', 'materi', this.value)">${defaults.materi}</textarea>
+                        <span class="print-data print-materi">${defaults.materi}</span>
+                    </td>
+                    <td>
+                        <input type="number" name="hadir" value="${defaults.hadir}" min="0" placeholder="0" required oninput="updatePrintData('row-${agendaCounter}', 'hadir', this.value)">
+                        <span class="print-data print-hadir">${defaults.hadir}</span>
+                    </td>
+                    <td>
+                        <input type="number" name="tidak_hadir" value="${defaults.tidak_hadir}" min="0" placeholder="0" required oninput="updatePrintData('row-${agendaCounter}', 'tidak_hadir', this.value)">
+                        <span class="print-data print-tidak_hadir">${defaults.tidak_hadir}</span>
+                    </td>
+                    <td class="absent-students-col">
+                        <textarea name="nama_alpa" rows="3" placeholder="Contoh: Rina (Sakit), Tono (Izin), Ali (Alpa)" oninput="updatePrintData('row-${agendaCounter}', 'nama_alpa', this.value)">${defaults.nama_alpa}</textarea>
+                        <span class="print-data print-nama_alpa">${defaults.nama_alpa}</span>
+                    </td>
+                </tr>
+            `;
+
+            jurnalBody.insertAdjacentHTML('beforeend', rowHtml);
+        }
+
+        function saveJurnal() {
+            saveInfoHeader(); 
+            const rows = jurnalBody.querySelectorAll('tr');
+            const dataToSave = [];
+
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll('input, textarea');
+                const rowData = {};
+                
+                inputs.forEach(input => {
+                    if (input.name === 'nama_alpa' || input.name === 'tanggal' || input.name === 'kelas' || input.name === 'materi' || input.name === 'hadir' || input.name === 'tidak_hadir') {
+                        rowData[input.name] = input.value;
+                    }
+                });
+                dataToSave.push(rowData);
+            });
+
+            localStorage.setItem(JURNAL_STORAGE_KEY, JSON.stringify(dataToSave));
+            alert('Semua Agenda dan Data Header Berhasil Disimpan di Peramban Anda!');
+        }
+
+        function loadJurnal() {
+            loadInfoHeader(); 
+
+            const savedData = localStorage.getItem(JURNAL_STORAGE_KEY);
+
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                
+                jurnalBody.innerHTML = '';
+                agendaCounter = 0; 
+
+                parsedData.forEach(data => {
+                    createNewAgendaRow(data);
+                });
+            } else {
+                createNewAgendaRow();
+            }
+        }
+
+        function printJurnal() {
+            saveJurnal(); 
+            window.print();
+        }
+
+        // Pemasangan Event Listener
+        document.addEventListener('DOMContentLoaded', () => {
+            loadJurnal();
+            
+            infoHeaderForm.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', () => updatePrintDataHeader(input.name, input.value));
+            });
+
+            document.getElementById('btn-add').addEventListener('click', () => createNewAgendaRow());
+            document.getElementById('btn-save').addEventListener('click', saveJurnal);
+            document.getElementById('btn-print').addEventListener('click', printJurnal);
+        });
+    </script>
+</body>
+</html>
