@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jurnal KBM Guru - Info Header Vertikal</title>
+    <title>Jurnal KBM Guru - FINAL VERSION</title>
     
     <style>
         body {
@@ -13,7 +13,7 @@
         }
 
         .container {
-            max-width: 1000px; 
+            max-width: 1200px; 
             margin: 0 auto;
             background: #fff;
             padding: 30px;
@@ -29,7 +29,7 @@
             margin-bottom: 20px;
         }
 
-        /* Gaya untuk Header Info (Nama Guru, Mapel, Sekolah) */
+        /* Gaya untuk Header Info (Vertikal) */
         .info-header {
             display: block; 
             margin-bottom: 30px;
@@ -71,7 +71,7 @@
 
         th, td {
             border: 1px solid #ddd;
-            padding: 12px;
+            padding: 10px; /* Padding sedikit dikurangi */
             text-align: left;
             vertical-align: top;
         }
@@ -103,22 +103,35 @@
             margin-top: 20px;
         }
         
-        #btn-add { background-color: #ffc107; color: #333; }
-        #btn-save { background-color: #28a745; color: white; }
-        #btn-print { background-color: #007bff; color: white; }
+        /* Tombol Hapus */
+        .btn-delete-row {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+            display: inline-block; /* Agar sejajar */
+        }
+        .btn-delete-row:hover { background-color: #c82333; }
 
         .print-data { display: none; }
         
         /* PENGATURAN LEBAR KOLOM UNTUK LAYAR */
-        /* Kolom Kelas diperlebar dari 10% menjadi 15% */
-        .materi-col { width: 25%; } /* Dikurangi dari 30% menjadi 25% */
-        .absent-students-col { width: 20%; } 
-        
+        .date-col { width: 10%; }
+        .jam-col { width: 5%; } 
+        .kelas-col { width: 10%; } 
+        .materi-col { width: 25%; } 
+        .hadir-col, .tidak-hadir-col { width: 6%; } 
+        .absent-students-col { width: 28%; } 
+        .action-col { width: 8%; } 
+
         /* ---------------------------------------------------- */
         /* CSS KHUSUS UNTUK CETAK (@media print) */
         /* ---------------------------------------------------- */
         @media print {
-            .button-group, p { display: none !important; }
+            .button-group, p, .action-col { display: none !important; } 
             .container { box-shadow: none !important; padding: 0 !important; width: 100% !important; margin: 0 !important; }
             body { margin: 0 !important; background: white !important; }
             
@@ -131,19 +144,18 @@
 
             table { width: 100% !important; table-layout: fixed; }
             th { background-color: #007bff !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-
+            
             input:not(.info-header input), textarea { display: none; }
             .print-data { display: block !important; word-wrap: break-word; white-space: pre-wrap; }
             
-            /* PENGATURAN LEBAR KOLOM UNTUK CETAK */
-            /* Kolom Kelas (2) diperlebar dari 10% menjadi 15% */
-            /* Kolom Materi (3) dikurangi dari 35% menjadi 30% */
+            /* Proporsi kolom cetak (Total 7 Kolom Data) */
             .print-safe-table th:nth-child(1), .print-safe-table td:nth-child(1) { width: 12%; } /* Hari/Tanggal */
-            .print-safe-table th:nth-child(2), .print-safe-table td:nth-child(2) { width: 15%; } /* Kelas (Lebar Baru) */
-            .print-safe-table th:nth-child(3), .print-safe-table td:nth-child(3) { width: 30%; } /* Materi & Kegiatan (Lebar Baru) */
-            .print-safe-table th:nth-child(4), .print-safe-table td:nth-child(4) { width: 8%; }  
-            .print-safe-table th:nth-child(5), .print-safe-table td:nth-child(5) { width: 8%; }  
-            .print-safe-table th:nth-child(6), .print-safe-table td:nth-child(6) { width: 27%; } 
+            .print-safe-table th:nth-child(2), .print-safe-table td:nth-child(2) { width: 5%; }  /* Jam ke- */
+            .print-safe-table th:nth-child(3), .print-safe-table td:nth-child(3) { width: 10%; } /* Kelas */
+            .print-safe-table th:nth-child(4), .print-safe-table td:nth-child(4) { width: 30%; } /* Materi & Kegiatan */
+            .print-safe-table th:nth-child(5), .print-safe-table td:nth-child(5) { width: 8%; }  /* Hadir */
+            .print-safe-table th:nth-child(6), .print-safe-table td:nth-child(6) { width: 8%; }  /* Tidak Hadir */
+            .print-safe-table th:nth-child(7), .print-safe-table td:nth-child(7) { width: 27%; } /* Nama Siswa Tidak Hadir */
         }
     </style>
 </head>
@@ -172,12 +184,13 @@
             <table class="print-safe-table"> 
                 <thead>
                     <tr>
-                        <th style="width: 10%;">Hari / Tanggal</th>
-                        <th style="width: 15%;">Kelas</th> <th class="materi-col">Materi & Kegiatan</th>
-                        <th style="width: 8%;">Hadir</th>
-                        <th style="width: 8%;">Tidak Hadir</th>
+                        <th class="date-col">Hari / Tanggal</th>
+                        <th class="jam-col">Jam ke-</th> <th class="kelas-col">Kelas</th> 
+                        <th class="materi-col">Materi & Kegiatan</th>
+                        <th class="hadir-col">Hadir</th>
+                        <th class="tidak-hadir-col">Tidak Hadir</th>
                         <th class="absent-students-col">Nama Siswa Tidak Hadir (dan Keterangan)</th>
-                    </tr>
+                        <th class="action-col">Aksi</th> </tr>
                 </thead>
                 <tbody id="jurnal-body">
                     </tbody>
@@ -199,7 +212,18 @@
         const infoHeaderForm = document.getElementById('info-header-form');
         let agendaCounter = 0;
 
-        // --- FUNGSI HEADER INFO ---
+        // FUNGSI HAPUS BARIS
+        function deleteRow(rowId) {
+            const row = document.getElementById(rowId);
+            if (row) {
+                if (confirm('Anda yakin ingin menghapus agenda baris ini?')) {
+                    row.remove();
+                    saveJurnal(); 
+                }
+            }
+        }
+        
+        // FUNGSI HEADER INFO & UTILITY
         function saveInfoHeader() {
             const data = {};
             const fields = infoHeaderForm.querySelectorAll('input');
@@ -230,8 +254,7 @@
             }
             saveInfoHeader();
         }
-
-        // --- FUNGSI JURNAL ---
+        
         function formatDate(dateString) {
             if (!dateString) return '';
             const [year, month, day] = dateString.split('-');
@@ -252,9 +275,11 @@
 
         function createNewAgendaRow(data = {}) {
             agendaCounter++;
-            
+            const currentRowId = `row-${Date.now() + agendaCounter}`; 
+
             const defaults = {
                 tanggal: data.tanggal || new Date().toISOString().substring(0, 10),
+                jam: data.jam || '', 
                 kelas: data.kelas || '',
                 materi: data.materi || '',
                 hadir: data.hadir || '',
@@ -264,31 +289,39 @@
             
             const formattedDate = formatDate(defaults.tanggal);
 
+            // Perhatian: Ini adalah template HTML yang sudah diperbarui
             const rowHtml = `
-                <tr id="row-${agendaCounter}">
+                <tr id="${currentRowId}">
                     <td>
-                        <input type="date" name="tanggal" value="${defaults.tanggal}" required oninput="updatePrintData('row-${agendaCounter}', 'tanggal', this.value)">
+                        <input type="date" name="tanggal" value="${defaults.tanggal}" required oninput="updatePrintData('${currentRowId}', 'tanggal', this.value)">
                         <span class="print-data print-tanggal">${formattedDate}</span>
                     </td>
                     <td>
-                        <input type="text" name="kelas" value="${defaults.kelas}" placeholder="X IPA 1" required oninput="updatePrintData('row-${agendaCounter}', 'kelas', this.value)">
+                        <input type="text" name="jam" value="${defaults.jam}" placeholder="1-2" required oninput="updatePrintData('${currentRowId}', 'jam', this.value)">
+                        <span class="print-data print-jam">${defaults.jam}</span>
+                    </td>
+                    <td>
+                        <input type="text" name="kelas" value="${defaults.kelas}" placeholder="X IPA 1" required oninput="updatePrintData('${currentRowId}', 'kelas', this.value)">
                         <span class="print-data print-kelas">${defaults.kelas}</span>
                     </td>
                     <td>
-                        <textarea name="materi" rows="3" placeholder="Materi dan Kegiatan KBM" oninput="updatePrintData('row-${agendaCounter}', 'materi', this.value)">${defaults.materi}</textarea>
+                        <textarea name="materi" rows="3" placeholder="Materi dan Kegiatan KBM" oninput="updatePrintData('${currentRowId}', 'materi', this.value)">${defaults.materi}</textarea>
                         <span class="print-data print-materi">${defaults.materi}</span>
                     </td>
                     <td>
-                        <input type="number" name="hadir" value="${defaults.hadir}" min="0" placeholder="0" required oninput="updatePrintData('row-${agendaCounter}', 'hadir', this.value)">
+                        <input type="number" name="hadir" value="${defaults.hadir}" min="0" placeholder="0" required oninput="updatePrintData('${currentRowId}', 'hadir', this.value)">
                         <span class="print-data print-hadir">${defaults.hadir}</span>
                     </td>
                     <td>
-                        <input type="number" name="tidak_hadir" value="${defaults.tidak_hadir}" min="0" placeholder="0" required oninput="updatePrintData('row-${agendaCounter}', 'tidak_hadir', this.value)">
+                        <input type="number" name="tidak_hadir" value="${defaults.tidak_hadir}" min="0" placeholder="0" required oninput="updatePrintData('${currentRowId}', 'tidak_hadir', this.value)">
                         <span class="print-data print-tidak_hadir">${defaults.tidak_hadir}</span>
                     </td>
                     <td class="absent-students-col">
-                        <textarea name="nama_alpa" rows="3" placeholder="Contoh: Rina (Sakit), Tono (Izin), Ali (Alpa)" oninput="updatePrintData('row-${agendaCounter}', 'nama_alpa', this.value)">${defaults.nama_alpa}</textarea>
+                        <textarea name="nama_alpa" rows="3" placeholder="Contoh: Rina (Sakit), Tono (Izin), Ali (Alpa)" oninput="updatePrintData('${currentRowId}', 'nama_alpa', this.value)">${defaults.nama_alpa}</textarea>
                         <span class="print-data print-nama_alpa">${defaults.nama_alpa}</span>
+                    </td>
+                    <td class="action-col">
+                        <button type="button" class="btn-delete-row" onclick="deleteRow('${currentRowId}')">Hapus</button>
                     </td>
                 </tr>
             `;
@@ -296,6 +329,7 @@
             jurnalBody.insertAdjacentHTML('beforeend', rowHtml);
         }
 
+        // FUNGSI SIMPAN/LOAD/CETAK
         function saveJurnal() {
             saveInfoHeader(); 
             const rows = jurnalBody.querySelectorAll('tr');
@@ -306,15 +340,17 @@
                 const rowData = {};
                 
                 inputs.forEach(input => {
-                    if (input.name === 'nama_alpa' || input.name === 'tanggal' || input.name === 'kelas' || input.name === 'materi' || input.name === 'hadir' || input.name === 'tidak_hadir') {
+                    if (input.name && input.name !== 'delete') { 
                         rowData[input.name] = input.value;
                     }
                 });
-                dataToSave.push(rowData);
+                if (Object.keys(rowData).length > 0) {
+                    dataToSave.push(rowData);
+                }
             });
 
             localStorage.setItem(JURNAL_STORAGE_KEY, JSON.stringify(dataToSave));
-            alert('Semua Agenda dan Data Header Berhasil Disimpan di Peramban Anda!');
+            alert('Semua Agenda Berhasil Disimpan di Peramban Anda!');
         }
 
         function loadJurnal() {
@@ -322,7 +358,7 @@
 
             const savedData = localStorage.getItem(JURNAL_STORAGE_KEY);
 
-            if (savedData) {
+            if (savedData && JSON.parse(savedData).length > 0) {
                 const parsedData = JSON.parse(savedData);
                 
                 jurnalBody.innerHTML = '';
@@ -332,6 +368,7 @@
                     createNewAgendaRow(data);
                 });
             } else {
+                jurnalBody.innerHTML = '';
                 createNewAgendaRow();
             }
         }
